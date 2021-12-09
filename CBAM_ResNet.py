@@ -63,7 +63,7 @@ class ResNet(object):
         x = BatchNormalization()(x)
         x = Activation('relu')(x)
         x = GlobalAvgPool2D()(x)
-        output = Dense(num_class, activation='softmax', kernel_initializer='he_normal')(x)
+        output = Dense(num_class, kernel_initializer='he_normal')(x)
 
         return keras.Model(inputs=inputs, outputs=output)
 
@@ -72,6 +72,6 @@ class ResNet(object):
 
 # model = ResNet()
 # model_res = model.build((224, 224, 3), 50, 2)
-# 
+#
 # print(model_res.summary())
 # plot_model(model_res, to_file='my_res.png', show_shapes=True)

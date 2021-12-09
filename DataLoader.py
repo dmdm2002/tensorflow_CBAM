@@ -13,11 +13,11 @@ class Loader(object):
 
         class_indexing_list = np.arange(len(classes))
 
-        for label in classes:
+        for i in range(len(classes)):
             temp = []
-            list = glob.glob(f'{root}/{label}/*.png')
+            list = glob.glob(f'{root}/{classes[i]}/*.png')
 
-            for i in range(len(list)):
+            for j in range(len(list)):
                 temp.append(class_indexing_list[i])
 
             path_list = path_list + list
@@ -40,7 +40,7 @@ class Loader(object):
 
     def load(self):
         img_ds = self.path_ds.map(self.decode_img, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-        ds = tf.data.Dataset.zip(img_ds, self.label_ds)
+        ds = tf.data.Dataset.zip((img_ds, self.label_ds))
 
         return ds
 

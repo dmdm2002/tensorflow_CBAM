@@ -33,6 +33,8 @@ class Trainner(setting_option):
         self.train_acc_metric.update_state(y, logits)
         self.loss_mean.update_state(loss)
 
+        return loss
+
     @tf.function
     def test_step(self, x, y):
         logits = self.model(x, training=False)
@@ -71,7 +73,7 @@ class Trainner(setting_option):
 
             manager.save()
 
-            print(f'Train [ Epoch ({epoch}/{self.epochs})   Loss : {result_loss}.4f   Acc : {train_acc}.4f ]')
+            print(f'Train [ Epoch ({epoch}/{self.epochs})   Loss : {result_loss}   Acc : {train_acc} ]')
 
             for step in range(full_val_steps):
                 img, label = next(val_ds_it)
@@ -80,7 +82,7 @@ class Trainner(setting_option):
             val_acc = self.test_acc_metric.result()
             self.test_acc_metric.reset_states()
 
-            print(f'Validation [ Epoch ({epoch}/{self.epochs})  Acc : {val_acc}.4f ]')
+            print(f'Validation [ Epoch ({epoch}/{self.epochs})  Acc : {val_acc} ]')
 
             with train_summary_writer.as_default():
                 tf.summary.scalar('loss', result_loss, step=epoch)
@@ -95,7 +97,7 @@ class Trainner(setting_option):
         test_ds_it = iter(test_ds_shuffle)
 
         for epoch in range(self.epochs):
-            ckpt_path = f'path_/{epoch+1}'
+            ckpt_path = f'{self.ckp_path}/ckpt-{epoch+1}'
             ckpt.restore(ckpt_path)
 
             print(f'Epoch ({epoch}/{self.epochs})')
